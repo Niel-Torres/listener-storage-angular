@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, HostListener } from '@angular/core';
 
 @Component({
   selector: 'app-popup',
@@ -6,28 +6,30 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
   styleUrls: ['./popup.component.scss']
 })
 export class PopupComponent implements OnInit {
-  
-/*   @Input() valueHijo: string = 'Texto desde el componente hijo';
-  
-  @Output() salida = new EventEmitter<string>(); */
 
   @Input() visible: boolean = false;
   @Output() close = new EventEmitter<boolean>();
 
+  dataFromItsme:any;
+
   constructor() { }
 
   ngOnInit(): void {
+    window.addEventListener("storage", this.storageEventHandler, false);
   }
-
-/*   enviarDato() {
-    this.salida.emit('Hola papá...');
-  } */
 
   closeModal() {
     console.log('PopupComponent: Emitir evento de cerrar modal');
     this.close.emit(false);
   }
 
- 
+  storageEventHandler(event: any) {
+    if(event.key === 'someKey') {
+      this.dataFromItsme = localStorage.getItem("someKey");
+      alert('storage updated');
+      window.localStorage.removeItem("someKey");
+      console.log('Datos desde la otra pestaña: '+this.dataFromItsme);
+    }
+  }
 
 }
